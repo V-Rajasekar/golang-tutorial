@@ -1,2 +1,258 @@
 # golang-tutorial
 Leaning GoLang fundamentals with examples
+
+## Go Predefined types
+ Predeclared types are
+
+- bool
+- string
+- int  int8  int16  int32  int64
+- uint uint8 uint16 uint32 uint64 uintptr
+- byte // alias for uint8
+- rune // alias for int32
+     // represents a Unicode code point (e.g) single Unicode characters ('a'), 8-bit octal numbers ('\141'), 8-bit hexadecimal numbers ('\x61'), 16-bit hexadecimal numbers ('\u0061'), or 32-bit Unicode numbers ('\U00000061')
+- float32 float64
+- complex64 complex128
+
+`Default values: bool - false, int - 0, string - ""`
+
+```go
+//Declaring and intializing types and variables
+    var flag // false
+    toggleOn := true
+    var (
+        x int = 10
+        name string
+    )
+```
+
+### var vs :=
+
+```go
+    var flag bool // false
+
+    y  := 20 //dcl & initalize 
+    y = 30 //assign valye
+
+    const x int64 = 10 // typed constant
+    cont z = 10 // untyped constant
+    //use const to create constants
+    var (
+    idKey   = "id"
+    nameKey = "name"
+    )
+
+```
+
+### Slices
+
+- slice length `len(slice)`
+- slice append `append(slice, x)`
+- capacity `cap(slice)`
+- Emptying a Slice `clear(slice)`
+- Declaring Your Slice
+
+```go
+    var slice []int // slice is nil
+    var slice = []int{} // slice with zero element
+    make([] int, 5, 10)// empty slice with default value
+```
+
+- Slicing Slices
+  - Index starts with 0. start inclusive, and end exclusive
+  
+  ```go
+    Slicing slices [a, b, c, d]
+    x: [a b c d]
+    y := x[:2] [a b]
+    z := x[1:] [b c d]
+    d := x[1:3] [b c]
+    e := x[:] [a b c d]
+  ```
+
+-copy a slice `num := copy(dest, src)` num no of copied values
+>note you can use copy with arrays, and slice and interchangeably. 
+- Converting Arrays to Slices. 
+    
+    ```go
+        xArray := [4]int{5, 6, 7, 8}
+        xSlice := xArray[:]
+        //convert a subset of an array into a slice:
+        x := [4]int{5, 6, 7, 8}
+        y := x[:2]
+    ```
+    - Taking a slice from an arrray has the same memory-sharing properties as taking a slice from a slice. Any update in original slice, affects the copied slice and vice versa  
+- Converting Slices to Arrays
+  - size of the array can be smaller, but not higher than slice size
+  
+  ```go
+  xSlice := []int{1, 2, 3, 4}
+  xArray := [4]int(xSlice)
+  ```
+
+## Strings Runes and Bytes
+
+- String is composed of a sequence of UTF-8 encoded code points.
+- String len computed using `len(s)`
+- Extracting a single value or a group of value is possible with index expression
+```go 
+var s string = "Hello there"
+var s2 string = s[4:7] // o t
+var s3 string = s[:5]// Hello
+var s4 string = s[6:]// there
+```
+- Converting string to byte `var bs [] byte= []byte(s) `
+  
+
+- Runes 
+- A single unicode char is called Runes 'x' like 'y'
+-  A single rune or byte can be converted to a string: `var b rune = 'y'`
+   `var s2 = string = string(b)`
+
+### Maps
+
+- create nilMap `var nilMap map[String]int` attempting to read returns the zero value for the map's value type. while write cause *panic*
+- create empty map `totalWins := map[string]int{}` read and write allowed
+- create map with default size:  `make(map[string], int, 10)`
+- Comparing Maps `maps.Equal(map1, map2) //prints true irrespective of the element in the order`
+- `comma ok Idiom` to check a key present in map
+  
+  ```go
+    m := map[string]int{
+        "hello": 5,
+        "world": 0,
+    }
+    //ok is true/false depending on the key present in the map.
+    v, ok := m["hello"]
+    fmt.Println(v, ok) // 5 true
+  ```
+- There is no set in GoLang. you have to create a map with either boolean, or struct value and your element as key.
+ 
+  ```go
+    func mapAsSetWithStruct() {
+    fmt.Println("------create set using map with structs ----")
+    intSet := map[int]struct{}{}
+    vals := []int{5, 10, 2, 5, 8, 7, 3, 9, 1, 2, 10}
+      for _, v := range vals {
+        intSet[v] = struct{}{}
+      }
+
+      if _, ok := intSet[5]; ok {
+        fmt.Println("5 is in the set")
+      }
+    }
+  ```
+
+### Structs
+
+- Declaring struct 
+  ```go 
+    type person struct {
+    name string
+    age  int
+    pet  string
+    }
+  ```
+- define variables of that type: `var fred person`
+- Assigning a struct to variable `bob := person{}` values are set to default
+- creating struct with value `beth := person{ age:  30, name: "Beth",}`
+- Accessing field `bob.name ="Bob"` `fmt.Println(bob.name)`
+- Anonymous Structs
+
+- Here the type of variables `person` and `pet` are anonymous structs.
+- Common situations: The first is when you translate external data into a struct or a struct into external data (like JSON or Protocol Buffers). This is called unmarshaling and marshaling data, respectively.
+  
+  ```go
+
+    var person struct {
+      name string
+      age  int
+      pet  string
+    }
+
+    person.name = "bob"
+    person.age = 50
+    person.pet = "dog"
+
+    pet := struct {
+      name string
+      kind string
+    }{
+      name: "Fido",
+      kind: "dog",
+    }
+  ```
+  - comparing and converting structs
+  - Go does allow you to perform a type conversion from one struct type to another if the fields of both structs have the same names, order, and types, Also no of fields should match.
+  - No method to overide unlike equals in java to compare incomparable structs for equality
+
+## Functions
+
+- Declaring and calling functions
+  
+- Go allows for multiple return values
+- if you weren’t going to read remainder, you would write the assignment as result, _, err := divAndRemainder(5, 2)
+
+```go
+   func divAndRemainder(num, denom int) (int, int, error) {
+    if denom == 0 {
+        return 0, 0, errors.New("cannot divide by zero")
+    }
+    return num / denom, num % denom, nil
+  }
+
+  //calling
+  func main() {
+    result, remainder, err := divAndRemainder(5, 2)
+    if err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
+    fmt.Println(result, remainder)
+}
+```
+- Functions Are values
+  
+- creating a function variable `var myFuncVariable func(string) int`
+  
+  ```go
+  var myFuncVariable func(string) int
+  func f1(a string) int {
+    return len(a)
+  }
+  myFuncVariable = f1
+    fmt.Println(myFuncVariable("Hello"))
+
+  ```
+
+- Anonymous Functions
+
+```go
+ f := func(j int) {
+        fmt.Println("printing", j, "from inside of an anonymous function")
+    }
+```   
+- Closures
+  - Writing functions inside another function is closures the inner function can access and modify variables declared in the outer function.
+ 
+ ````go
+ func main() {
+    a := 20
+    f := func() {
+        fmt.Println(a)
+        a = 30
+    }
+    f()
+    fmt.Println(a)
+}
+//prints 20 30
+ ```
+- Passing Functions as Parameters
+- sort function takes a slice and a function, here creating a anaymous function
+```go
+  // sort by last name
+  sort.Slice(people, func(i, j int) bool {
+      return people[i].LastName < people[j].LastName
+  })
+  fmt.Println(people)
+```
