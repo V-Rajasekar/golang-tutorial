@@ -249,6 +249,7 @@ var s4 string = s[6:]// there
  ```
 - Passing Functions as Parameters
 - sort function takes a slice and a function, here creating a anaymous function
+
 ```go
   // sort by last name
   sort.Slice(people, func(i, j int) bool {
