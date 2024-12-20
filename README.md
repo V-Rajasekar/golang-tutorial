@@ -235,7 +235,7 @@ var s4 string = s[6:]// there
 - Closures
   - Writing functions inside another function is closures the inner function can access and modify variables declared in the outer function.
  
- ````go
+ ```go
  func main() {
     a := 20
     f := func() {
@@ -256,4 +256,16 @@ var s4 string = s[6:]// there
       return people[i].LastName < people[j].LastName
   })
   fmt.Println(people)
-```
+```  
+
+## Resources
+Links for Self Learning Go
+
+- Practical Go Lessons - https://www.practical-go-lessons.com
+- Ultimate Go Programming (Video) - https://www.oreilly.com/library/view/ultimate-go-programming/9780135261651/
+- Golang on Pluralsight - https://app.pluralsight.com/paths/skill/go-core-language
+- Go By Example - https://gobyexample.com/
+- Go course at Codecademy - https://www.codecademy.com/learn/learn-go
+- Go Tour - https://tour.golang.org
+- Effective Go - https://golang.org/doc/effective_go.html
+- Learn Go With Tests - https://quii.gitbook.io/learn-go-with-tests/
