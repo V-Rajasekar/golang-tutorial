@@ -74,7 +74,7 @@ func main() {
  y := 10
  z := 20
  var pointerToY *int // creating a new Pointer type, alternative var pointer = new(int)
- fmt.Println("new pointerToY:", pointerToY == nil)
+ fmt.Println("new var pointerToY *int: Is nil?", pointerToY == nil)
  fmt.Println("new pointerToY value:", pointerToY)
  pointerToY = &y
  fmt.Println("pointerToY pointing to Y address(&y):", pointerToY)
@@ -104,7 +104,7 @@ func main() {
  fmt.Println("Printing ", f)
  err := json.Unmarshal([]byte(`{"name": "Bob", "age": 30}`), &f)
  if err != nil {
- print(err)
+  print(err)
  }
  fmt.Println("unmarshal Json to Struct address", f)
 
