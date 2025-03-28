@@ -235,7 +235,7 @@ Predeclared types are
 }
 ```
 
-- Functions Are values
+- Functions are values
 
 - creating a function variable `var myFuncVariable func(string) int`
 
@@ -260,42 +260,43 @@ Predeclared types are
 - Closures
   - Writing functions inside another function is closures the inner function can access and modify variables declared in the outer function.
 
- ````go
- func main() {
-    a := 20
-      f := func() {
-          fmt.Println(a)
-          a = 30
-      }
-    f()
-    fmt.Println(a)
-}
-//prints 20 30
+ ```go
+   func main() {
+      a := 20
+        f := func() {
+            fmt.Println(a)
+            a = 30
+        }
+      f()
+      fmt.Println(a)
+  }
+  //prints 20 30
  ```
 
 - Passing Functions as Parameters
 - sort function takes a slice and a function, here creating a anaymous function
 
-```
+```go
   // sort by last name
   sort.Slice(people, func(i, j int) bool {
       return people[i].LastName < people[j].LastName
   })
   fmt.Println(people)
 ```
+
 - defer
 
-- use `defer` to release the resources. (e.g) `defer f.close()`. `defer` can be used with a function, method or closure call.
-- In a Go function there can be muliple `defer` function, they run in
+- Use `defer` to release the resources. (e.g) `defer f.close()`. `defer` can be used with a function, method or closure call.
+- In a Go function, there can be multiple `defer` functions, they run in
 last-in, first-out(LIFO) order;
 
 ## Go Is Call by value
 
-- When you supply a variable for a parameter to a function, Go always make a copy of the value of the variable meaning any changes to primitive type int, string will not affect original.
-- Incase of map, and slice any delete, update will affect original. The noteable difference b/w map and slice is you can add new element in map, but not slice. The reason is map and slice are both implemented with pointers.
+- When you supply a variable for a parameter to a function, Go always makes a copy of the variable's value, meaning any changes to primitive type int or string will not affect original.
+- In case of map, and slice any delete, update will affect the original. The notable difference b/w map and slice is that you can add a new element in map, but not slice. The reason is map and slice are both implemented with pointers.
 
 
-```
+```go
   func modifyFails(inum int, s string, p Person) {
     inum = inum * 2
     s = "Good bye"
@@ -316,6 +317,7 @@ last-in, first-out(LIFO) order;
     mslice = append(mslice, 10)
   }
 ```
+
 ## Pointers
 
 GO pointers:
@@ -331,7 +333,8 @@ return the pointerReference see makePointer
 
 
 ## Resources
-Links for Self Learning Go
+
+Links for Self-Learning Go
 
 - Practical Go Lessons - https://www.practical-go-lessons.com
 - Ultimate Go Programming (Video) - https://www.oreilly.com/library/view/ultimate-go-programming/9780135261651/
