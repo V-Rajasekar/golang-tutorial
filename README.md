@@ -1,11 +1,16 @@
 - [golang-tutorial](#golang-tutorial)
   - [Go Predefined types](#go-predefined-types)
+  - [component syntax](#component-syntax)
+  - [Display Variables Values](#display-variables-values)
   - [var vs :=](#var-vs-)
+  - [Converting data types](#converting-data-types)
+  - [Pointers to store values](#pointers-to-store-values)
   - [Slices](#slices)
   - [Strings Runes and Bytes](#strings-runes-and-bytes)
   - [Maps](#maps)
   - [Structs](#structs)
   - [Functions](#functions)
+  - [Go Is Call by value](#go-is-call-by-value)
   - [Pointers](#pointers)
   - [Resources](#resources)
 
@@ -38,6 +43,44 @@ Predeclared types are
     )
 ```
 
+## component syntax
+
+
+| Component  | Syntax                                                                          |
+| ---------- | ------------------------------------------------------------------------------- |
+| Variable   | **var** *variableName* dataType = value                                         |
+| (Inferred) | variableName := value                                                           |
+| Constant   | **const** *constantName* = value                                                |
+| Array      | **var** arrayName[nElements] dataType                                           |
+| Slice      | *sliceName* := **make**([]dataType, nElements)                                  |
+| Map        | *mapName* := **make**(map[*keyDataType*] *valueDataType*)                       |
+| Channel    | *channelName* := ****make**(chan** *dataType*)                                  |
+| Struct     | **type** structName **struct** {*fieldName* *dataType*}                         |
+| Function   | **func** functionName(*paramName* dataType) returnDataType {return returnValue} |
+| Interface  | **type** interfaceName **interface** { methodName returnDataType}               |
+
+## Display Variables Values
+
+
+| Specifiers | Desc                  | Example                |
+| ---------- | --------------------- | ---------------------- |
+| %s         | string                | "hello"                |
+| %d         | number                | 123                    |
+| %f         | float                 | 123.45                 |
+| %t         | bool                  | true                   |
+| %c         | char                  | 'A'                    |
+| %p         | A machine mem address | 0x0022FF34             |
+| %v         | default(type)         | All of the above types |
+| %T         | dataType              | int, float             |
+
+```go
+pi := 3.14
+fmt.Printf("pi: %v type: %T \n", 3.14)
+fmt.Printf("pi: %v type: %T \n", 3.14)
+fmt.Printf("Right-aligned: %20.3f rounded pi:\n", pi)
+fmt.Printf("Left-aligned: %-20.3f rounded pi:\n", pi)
+```
+
 ## var vs :=
 
 - `var` is for declaring a variable `var flag bool`
@@ -59,6 +102,50 @@ Predeclared types are
     )
 
 ```
+
+## Converting data types
+
+- Casting Int to String (vice-versa)
+| func                       | description                     | example         |
+| -------------------------- | ------------------------------- | --------------- |
+| r, e = strconv.Atoi("123") | String value of Int to int type | o/p: 123, int   |
+| strconv.ItoA(123)          | int to String                   | o/p:123, string |
+
+- Casting String to other types (Vice-versa)
+
+```go
+//Float to String
+	s = strconv.FormatFloat(3.1415, 'f', -1, 64)
+	fmt.Printf("Value: %v type: %T \n", s, s) // 3.1415, string 
+//String to Float strconv.ParseFloat(s string, bitSize int)
+  f, err := strconv.ParseFloat("3.1415", 64)  
+```
+
+- Casting int to float
+  `i := float64(3)` 
+
+## Pointers to store values
+
+Pointers:</br>
+
+- The `&` operator is used to get the address of a variable (e.g., &a).
+- The `*` operator is used to dereference a pointer, i.e., access the value at the memory address it points to.
+
+```go 
+	var num int = 10
+	var numPtr *int = &num // Pointer to num
+	var numPtr2 **int = &numPtr // Pointer to pointer to num
+	fmt.Println("Value of num:", num)         // Output: 10
+	fmt.Println("Value of numPtr:", *numPtr) // Output: 10
+  fmt.Println("Address of num:", &num)         // Output: Address of num	
+	fmt.Println("Address of numPtr:", &numPtr) // Output: Address of numPtr
+```
+- In Go, pointers can be used with any data type to update the values stored in memory.
+- Data types where pointer techniques can be used: int(all varients), float(all varients), bool, String, struct, arrays or other composite types
+- **Types Where Pointers Are Not Needed**
+Slices, maps, and channels are reference types in Go, meaning they already behave like pointers. You can modify their contents without explicitly using pointers.
+
+[Pointers](./pointers/pointer.go)
 
 ## Slices
 
