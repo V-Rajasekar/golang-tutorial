@@ -1,7 +1,7 @@
 package cube
 
 type Dims struct {
-	width, length, height int	
+	width, length, height int
 }
 
 func (d *Dims) GetVolume() int {

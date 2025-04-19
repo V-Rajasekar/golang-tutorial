@@ -5,12 +5,12 @@
   - [var vs :=](#var-vs-)
   - [Converting data types](#converting-data-types)
   - [Pointers to store values](#pointers-to-store-values)
+  - [Functions](#functions)
+  - [Go Is Call by value](#go-is-call-by-value)
   - [Slices](#slices)
   - [Strings Runes and Bytes](#strings-runes-and-bytes)
   - [Maps](#maps)
   - [Structs](#structs)
-  - [Functions](#functions)
-  - [Go Is Call by value](#go-is-call-by-value)
   - [Pointers](#pointers)
   - [Resources](#resources)
 
@@ -140,12 +140,124 @@ Pointers:</br>
   fmt.Println("Address of num:", &num)         // Output: Address of num	
 	fmt.Println("Address of numPtr:", &numPtr) // Output: Address of numPtr
 ```
+
 - In Go, pointers can be used with any data type to update the values stored in memory.
 - Data types where pointer techniques can be used: int(all varients), float(all varients), bool, String, struct, arrays or other composite types
 - **Types Where Pointers Are Not Needed**
 Slices, maps, and channels are reference types in Go, meaning they already behave like pointers. You can modify their contents without explicitly using pointers.
 
 [Pointers](./pointers/pointer.go)
+
+## Functions
+
+- Declaring and calling functions
+
+- Go allows for multiple return values
+- if you weren’t going to read remainder, you would write the assignment as result, _, err := divAndRemainder(5, 2)
+
+```go
+   func divAndRemainder(num, denom int) (int, int, error) {
+    if denom == 0 {
+        return 0, 0, errors.New("cannot divide by zero")
+    }
+    return num / denom, num % denom, nil
+  }
+
+  //calling
+  func main() {
+    result, remainder, err := divAndRemainder(5, 2)
+    if err != nil {
+        fmt.Println(err)
+        os.Exit(1)
+    }
+    fmt.Println(result, remainder)
+}
+```
+
+- Functions are values
+
+- creating a function variable `var myFuncVariable func(string) int`
+
+  ```go
+  var myFuncVariable func(string) int
+  func f1(a string) int {
+    return len(a)
+  }
+  myFuncVariable = f1
+    fmt.Println(myFuncVariable("Hello"))
+
+  ```
+
+- Anonymous Functions
+
+```go
+ f := func(j int) {
+        fmt.Println("printing", j, "from inside of an anonymous function")
+    }
+```
+
+- Closures
+  - Writing functions inside another function is closures the inner function can access and modify variables declared in the outer function.
+
+ ```go
+   func main() {
+      a := 20
+        f := func() {
+            fmt.Println(a)
+            a = 30 //shadow var assignment will not affect the originals
+        }
+      f()
+      fmt.Println(a)
+  }
+  //prints 20 30
+ ```
+
+- Passing Functions as Parameters
+- sort function takes a slice and a function, here creating a anaymous function
+
+```go
+  // sort by last name
+  sort.Slice(people, func(i, j int) bool {
+      return people[i].LastName < people[j].LastName
+  })
+  fmt.Println(people)
+```
+
+- defer
+
+- Use `defer` to release the resources. (e.g) `defer f.close()`. `defer` can be used with a function, method or closure call.
+- In a Go function, there can be multiple `defer` functions, they run in
+last-in, first-out(LIFO) order;
+
+## Go Is Call by value
+
+- When you supply a variable for a parameter to a function, Go always makes a copy of the variable's value, meaning any changes to primitive type int or string will not affect original.
+- In case of map, and slice any delete, update will affect the original. The notable difference b/w map and slice is that you can add a new element in map, but not slice. The reason is map and slice are both implemented with pointers.
+
+
+```go
+  func modifyFails(inum int, s string, p Person) {
+    inum = inum * 2
+    s = "Good bye"
+    p.FirstName = "Bob"
+  }
+
+  func modMap(gmap map[int]string) {
+    gmap[1] = "Hello,"
+    gmap[3] = "Evening"
+    delete(gmap, 1)
+    gmap[4] = "raj"
+  }
+
+  func modSlice(mslice []int) {
+    for k, v := range mslice {
+      mslice[k] = v * 2
+    }
+    mslice = append(mslice, 10)
+  }
+```
+
+[functions](./functions/functions.go)
 
 ## Slices
 
@@ -296,114 +408,6 @@ Slices, maps, and channels are reference types in Go, meaning they already behav
   - Go does allow you to perform a type conversion from one struct type to another if the fields of both structs have the same names, order, and types, Also no of fields should match.
   - No method to overide unlike equals in java to compare incomparable structs for equality
 
-## Functions
-
-- Declaring and calling functions
-
-- Go allows for multiple return values
-- if you weren’t going to read remainder, you would write the assignment as result, _, err := divAndRemainder(5, 2)
-
-```go
-   func divAndRemainder(num, denom int) (int, int, error) {
-    if denom == 0 {
-        return 0, 0, errors.New("cannot divide by zero")
-    }
-    return num / denom, num % denom, nil
-  }
-
-  //calling
-  func main() {
-    result, remainder, err := divAndRemainder(5, 2)
-    if err != nil {
-        fmt.Println(err)
-        os.Exit(1)
-    }
-    fmt.Println(result, remainder)
-}
-```
-
-- Functions are values
-
-- creating a function variable `var myFuncVariable func(string) int`
-
-  ```go
-  var myFuncVariable func(string) int
-  func f1(a string) int {
-    return len(a)
-  }
-  myFuncVariable = f1
-    fmt.Println(myFuncVariable("Hello"))
-
-  ```
-
-- Anonymous Functions
-
-```go
- f := func(j int) {
-        fmt.Println("printing", j, "from inside of an anonymous function")
-    }
-```
-
-- Closures
-  - Writing functions inside another function is closures the inner function can access and modify variables declared in the outer function.
-
- ```go
-   func main() {
-      a := 20
-        f := func() {
-            fmt.Println(a)
-            a = 30
-        }
-      f()
-      fmt.Println(a)
-  }
-  //prints 20 30
- ```
-
-- Passing Functions as Parameters
-- sort function takes a slice and a function, here creating a anaymous function
-
-```go
-  // sort by last name
-  sort.Slice(people, func(i, j int) bool {
-      return people[i].LastName < people[j].LastName
-  })
-  fmt.Println(people)
-```
-
-- defer
-
-- Use `defer` to release the resources. (e.g) `defer f.close()`. `defer` can be used with a function, method or closure call.
-- In a Go function, there can be multiple `defer` functions, they run in
-last-in, first-out(LIFO) order;
-
-## Go Is Call by value
-
-- When you supply a variable for a parameter to a function, Go always makes a copy of the variable's value, meaning any changes to primitive type int or string will not affect original.
-- In case of map, and slice any delete, update will affect the original. The notable difference b/w map and slice is that you can add a new element in map, but not slice. The reason is map and slice are both implemented with pointers.
-
-
-```go
-  func modifyFails(inum int, s string, p Person) {
-    inum = inum * 2
-    s = "Good bye"
-    p.FirstName = "Bob"
-  }
-
-  func modMap(gmap map[int]string) {
-    gmap[1] = "Hello,"
-    gmap[3] = "Evening"
-    delete(gmap, 1)
-    gmap[4] = "raj"
-  }
-
-  func modSlice(mslice []int) {
-    for k, v := range mslice {
-      mslice[k] = v * 2
-    }
-    mslice = append(mslice, 10)
-  }
-```
 
 ## Pointers
 
